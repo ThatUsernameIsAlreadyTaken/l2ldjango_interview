@@ -1,9 +1,10 @@
 from datetime import datetime
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.template import loader
 from .forms import *
+import glob
 
 
 def index(request):
@@ -27,4 +28,10 @@ def upload_file(request):
     return render(request, "l2l/images.html", {'form':form})
 
 def success(request):
-    return HttpResponse("sucessfully uploaded")
+    return redirect(show_image)
+
+def show_image(request):
+    image_list = []
+    for filename in glob.glob("media/images/*.png"):
+        image_list.append(filename)
+    return render_to_response("l2l/show.html",{"images":image_list})
